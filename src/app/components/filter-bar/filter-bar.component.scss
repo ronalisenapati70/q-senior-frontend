@@ -1,0 +1,78 @@
+:host {
+  display: block;
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+form.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Each field container */
+.field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 1 260px; /* grow/shrink, preferred width */
+  min-width: 180px;
+  box-sizing: border-box;
+}
+
+/* Make mat form fields occupy available field space */
+.field mat-form-field {
+  width: 100%;
+  min-width: 120px;
+  box-sizing: border-box;
+}
+
+/* Slightly larger multi-selects */
+.field mat-form-field[appearance] mat-select[multiple],
+.field mat-form-field mat-select[multiple] {
+  max-width: 420px;
+}
+
+/* Checkbox alignment */
+.field mat-checkbox {
+  margin: 2px 0;
+}
+
+/* Actions (buttons) */
+.actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 6px;
+  flex: 0 0 auto;
+}
+
+/* Ensure buttons don't wrap on small screens */
+.actions button {
+  white-space: nowrap;
+}
+
+/* Responsive: full width fields on narrow screens */
+@media (max-width: 640px) {
+  form.filter-bar {
+    gap: 10px;
+  }
+
+  .field {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .actions button {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}

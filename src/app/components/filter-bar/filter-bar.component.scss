@@ -17,30 +17,26 @@ form.filter-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex: 0 1 260px; /* grow/shrink, preferred width */
+  flex: 0 1 260px;
   min-width: 180px;
   box-sizing: border-box;
 }
 
-/* Make mat form fields occupy available field space */
 .field mat-form-field {
   width: 100%;
   min-width: 120px;
   box-sizing: border-box;
 }
 
-/* Slightly larger multi-selects */
 .field mat-form-field[appearance] mat-select[multiple],
 .field mat-form-field mat-select[multiple] {
   max-width: 420px;
 }
 
-/* Checkbox alignment */
 .field mat-checkbox {
   margin: 2px 0;
 }
 
-/* Actions (buttons) */
 .actions {
   display: flex;
   gap: 8px;
@@ -49,12 +45,42 @@ form.filter-bar {
   flex: 0 0 auto;
 }
 
-/* Ensure buttons don't wrap on small screens */
 .actions button {
   white-space: nowrap;
 }
 
-/* Responsive: full width fields on narrow screens */
+.filter-btn {
+  border-radius: 999px;
+  font-weight: 600;
+  padding: 6px 20px;
+  transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &--apply {
+    background: linear-gradient(120deg, var(--color-primary-accent), var(--color-secondary));
+    border: none;
+    box-shadow: 0 8px 18px rgba(90, 126, 234, 0.25);
+    color: #fff;
+
+    &:hover {
+      box-shadow: 0 10px 24px rgba(90, 126, 234, 0.35);
+    }
+  }
+
+  &--reset {
+    background: transparent;
+    border: 1px solid rgba(20, 32, 51, 0.2);
+    color: var(--color-text);
+
+    &:hover {
+      background: rgba(20, 32, 51, 0.05);
+    }
+  }
+}
+
 @media (max-width: 640px) {
   form.filter-bar {
     gap: 10px;

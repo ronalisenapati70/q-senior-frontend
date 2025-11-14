@@ -59,18 +59,7 @@ form.filter-bar {
     transform: translateY(-1px);
   }
 
-  &--apply {
-    background: linear-gradient(120deg, var(--color-primary-accent), var(--color-secondary));
-    border: none;
-    box-shadow: 0 8px 18px rgba(90, 126, 234, 0.25);
-    color: #fff;
-
-    &:hover {
-      box-shadow: 0 10px 24px rgba(90, 126, 234, 0.35);
-    }
-  }
-
-  &--reset {
+  &--standard {
     background: transparent;
     border: 1px solid rgba(20, 32, 51, 0.2);
     color: var(--color-text);

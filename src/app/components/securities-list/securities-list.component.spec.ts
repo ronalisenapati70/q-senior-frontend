@@ -6,6 +6,7 @@ import { Security } from '../../models/security';
 import { SECURITIES } from '../../mocks/securities-mocks';
 import { SecurityService } from '../../services/security.service';
 import { SecuritiesListComponent } from './securities-list.component';
+import { SecuritiesFilter } from '../../models/securities-filter';
 
 const MOCK_SECURITY: Security = {
   id: '1',
@@ -72,6 +73,22 @@ describe('SecuritiesListComponent', () => {
       name: 'Bond',
       skip: 0,
       limit: 25,
+    });
+  });
+
+  it('falls back to an empty filter when onFilterChange receives a nullish value', () => {
+    component['securities$'].subscribe();
+    component['totalCount$'].subscribe();
+
+    component.onFilterChange({ name: 'Alpha' });
+    securityService.getSecurities.calls.reset();
+
+    component.onFilterChange(undefined as unknown as Partial<SecuritiesFilter>);
+
+    expect(component['pageIndex']).toBe(0);
+    expect(securityService.getSecurities).toHaveBeenCalledWith({
+      skip: 0,
+      limit: 10,
     });
   });
 });

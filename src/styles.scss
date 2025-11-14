@@ -38,3 +38,22 @@ app-task3 {
   --gradient-card-amber: radial-gradient(circle at bottom left, rgba(255, 255, 255, 0.9), rgba(255, 205, 106, 0.3));
   --shadow-soft: 0 18px 40px rgba(14, 25, 44, 0.15);
 }
+
+.no-data-row td {
+  text-align: center;
+  font-style: italic;
+  color: rgba(20, 32, 51, 0.6);
+  padding: 32px 16px;
+}
+
+.security-list ::ng-deep table.mat-mdc-table tbody tr:nth-child(odd) {
+  background: rgba(20, 32, 51, 0.02);
+}
+
+.security-list ::ng-deep table.mat-mdc-table tbody tr:nth-child(even) {
+  background: rgba(20, 32, 51, 0.06);
+}
+
+.security-list ::ng-deep table.mat-mdc-table tbody tr:hover {
+  background: rgba(90, 126, 234, 0.12);
+}

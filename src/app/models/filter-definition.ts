@@ -11,6 +11,5 @@ export interface FilterField {
   type: FilterFieldType;
   options?: Array<FilterFieldOption | string>;
   placeholder?: string;
-  // optional initial value
   value?: any;
 }

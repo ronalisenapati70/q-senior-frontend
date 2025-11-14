@@ -11,7 +11,7 @@ describe('FilterBarComponent', () => {
 
   const baseFields: FilterField[] = [
     { key: 'name', label: 'Name', type: 'text' },
-    { key: 'types', label: 'Types', type: 'multiselect', options: ['Bond', 'Equity'] },
+    { key: 'types', label: 'Types', type: 'multiselect', options: ['Loan', 'Equity'] },
     { key: 'isPrivate', label: 'Private', type: 'boolean' },
     { key: 'status', label: 'Status', type: 'select', options: [{ label: 'Active', value: 'active' }] },
   ];
@@ -58,8 +58,8 @@ describe('FilterBarComponent', () => {
 
   it('resets controls and emits cleaned defaults on reset', () => {
     component.form.patchValue({
-      name: 'Bond',
-      types: ['Bond'],
+      name: 'Loan',
+      types: ['Loan'],
       isPrivate: true,
       status: 'active',
     });

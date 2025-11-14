@@ -30,7 +30,8 @@ export class SecurityService {
 
     return SECURITIES.filter(
       (s) =>
-        (!securityFilter.name || s.name.includes(securityFilter.name)) &&
+        (!securityFilter.name ||
+          s.name.toLowerCase().includes(securityFilter.name.toLowerCase())) &&
         (!securityFilter.types ||
           securityFilter.types.some((type) => s.type === type)) &&
         (!securityFilter.currencies ||
@@ -42,9 +43,6 @@ export class SecurityService {
     );
   }
 
-  /**
-   * Get total count for the given filter (server-side count mock)
-   */
   countSecurities(securityFilter?: SecuritiesFilter): Observable<number> {
     const count = this._filterSecurities(securityFilter).length;
     return of(count).pipe(delay(300));

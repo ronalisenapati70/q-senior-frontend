@@ -41,7 +41,6 @@ export class FilterBarComponent implements OnInit, OnChanges {
   private buildForm() {
     const group: any = {};
     (this.fields || []).forEach((f) => {
-      // set initial values depending on type
       const initial =
         f?.value !== undefined
           ? f.value
@@ -55,7 +54,6 @@ export class FilterBarComponent implements OnInit, OnChanges {
       group[f.key] = [initial];
     });
     this.form = this.fb.group(group);
-    // emit initial cleaned value so parent can load immediately if needed
     this.emitClean(this.form.value);
   }
 

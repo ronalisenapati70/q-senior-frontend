@@ -14,4 +14,16 @@
   box-shadow: var(--shadow-soft);
   padding: 16px;
   overflow: auto;
+
+  ::ng-deep table.mat-mdc-table tbody tr:nth-child(odd) {
+    background: rgba(91, 141, 239, 0.08);
+  }
+
+  ::ng-deep table.mat-mdc-table tbody tr:nth-child(even) {
+    background: rgba(91, 141, 239, 0.16);
+  }
+
+  ::ng-deep table.mat-mdc-table tbody tr:hover {
+    background: rgba(91, 141, 239, 0.3);
+  }
 }

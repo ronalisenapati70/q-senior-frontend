@@ -32,7 +32,7 @@ export class SecuritiesListComponent implements OnInit {
   private baseFilter: Partial<SecuritiesFilter> = {};
   protected pageIndex = 0;
   protected pageSize = 10;
-  protected displayedColumns: string[] = ['name', 'type', 'currency'];
+  protected filterColumns: string[] = ['name', 'type', 'currency'];
 
   private _securityService = inject(SecurityService);
   protected loadingSecurities$: BehaviorSubject<boolean> =
@@ -67,7 +67,7 @@ export class SecuritiesListComponent implements OnInit {
       {
         key: 'isPrivate',
         label: 'Private',
-        type: 'select',
+        type: 'boolean',
         options: [
           { label: 'Private', value: true },
           { label: 'Public', value: false },

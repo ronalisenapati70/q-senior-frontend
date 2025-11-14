@@ -68,16 +68,16 @@ describe('SecuritiesListComponent', () => {
 
     securityService.getSecurities.calls.reset();
     securityService.countSecurities.calls.reset();
-    component.onFilterChange({ name: 'Bond' });
+    component.onFilterChange({ name: 'Loan' });
 
     expect(component['pageIndex']).toBe(0);
     expect(securityService.getSecurities).toHaveBeenCalledWith({
-      name: 'Bond',
+      name: 'Loan',
       skip: 0,
       limit: 25,
     });
     expect(securityService.countSecurities).toHaveBeenCalledWith({
-      name: 'Bond',
+      name: 'Loan',
       skip: 0,
       limit: 25,
     });

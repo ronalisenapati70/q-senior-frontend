@@ -19,11 +19,11 @@
   font-size: 1.15rem;
 }
 
-.task3-hero {
+.task3-header {
   position: relative;
   overflow: hidden;
   border-radius: 1.5rem;
-  background: var(--gradient-hero);
+  background: var(--gradient-header);
   box-shadow: var(--shadow-soft);
 
   &::after {
@@ -40,15 +40,15 @@
   }
 }
 
-.task3-hero__image img {
+.task3-header__image img {
   transition: transform 300ms ease;
 }
 
-.task3-hero__image:hover img {
+.task3-header__image:hover img {
   transform: scale(1.06);
 }
 
-.task3-hero__facts .task3-fact-card {
+.task3-header__facts .task3-fact-card {
   backdrop-filter: blur(4px);
   border: none;
   color: var(--color-text);

@@ -3,7 +3,7 @@
   <button mat-button (click)="deselectAll()">Deselect all</button>
   <button mat-button (click)="recreateData()">Recreate data</button>
 </div>
-<cdk-virtual-scroll-viewport itemSize="40">
+<cdk-virtual-scroll-viewport class="task-viewport" itemSize="40">
   <div
     class="task-row"
     *cdkVirtualFor="let row of rows(); trackBy: trackBy"

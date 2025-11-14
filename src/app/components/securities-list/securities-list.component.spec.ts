@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PageEvent } from '@angular/material/paginator';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { of } from 'rxjs';
+import { of, take } from 'rxjs';
 import { Security } from '../../models/security';
 import { SECURITIES } from '../../mocks/securities-mocks';
 import { SecurityService } from '../../services/security.service';
@@ -48,8 +48,8 @@ describe('SecuritiesListComponent', () => {
   });
 
   it('resets paging and pushes a new filter when the filter changes', () => {
-    component['securities$'].subscribe();
-    component['totalCount$'].subscribe();
+    component['securities$'].pipe(take(1)).subscribe();
+    component['totalCount$'].pipe(take(1)).subscribe();
     securityService.getSecurities.calls.reset();
     securityService.countSecurities.calls.reset();
 
@@ -64,8 +64,10 @@ describe('SecuritiesListComponent', () => {
     expect(component['pageIndex']).toBe(2);
     expect(component['pageSize']).toBe(25);
     expect(securityService.getSecurities).toHaveBeenCalledWith(jasmine.objectContaining({ skip: 50, limit: 25 }));
+    expect(securityService.countSecurities).toHaveBeenCalledWith(jasmine.objectContaining({ skip: 50, limit: 25 }));
 
     securityService.getSecurities.calls.reset();
+    securityService.countSecurities.calls.reset();
     component.onFilterChange({ name: 'Bond' });
 
     expect(component['pageIndex']).toBe(0);
@@ -74,19 +76,29 @@ describe('SecuritiesListComponent', () => {
       skip: 0,
       limit: 25,
     });
+    expect(securityService.countSecurities).toHaveBeenCalledWith({
+      name: 'Bond',
+      skip: 0,
+      limit: 25,
+    });
   });
 
   it('falls back to an empty filter when onFilterChange receives a nullish value', () => {
-    component['securities$'].subscribe();
-    component['totalCount$'].subscribe();
+    component['securities$'].pipe(take(1)).subscribe();
+    component['totalCount$'].pipe(take(1)).subscribe();
 
     component.onFilterChange({ name: 'Alpha' });
     securityService.getSecurities.calls.reset();
+    securityService.countSecurities.calls.reset();
 
     component.onFilterChange(undefined as unknown as Partial<SecuritiesFilter>);
 
     expect(component['pageIndex']).toBe(0);
     expect(securityService.getSecurities).toHaveBeenCalledWith({
+      skip: 0,
+      limit: 10,
+    });
+    expect(securityService.countSecurities).toHaveBeenCalledWith({
       skip: 0,
       limit: 10,
     });

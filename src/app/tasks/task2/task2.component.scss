@@ -41,6 +41,12 @@ cdk-virtual-scroll-viewport {
   box-shadow: inset 0 1px 0 rgba(20, 32, 51, 0.04);
 }
 
+.task-viewport {
+  height: 100%;
+  min-height: 320px;
+  display: block;
+}
+
 .task-row {
   display: flex;
   align-items: center;

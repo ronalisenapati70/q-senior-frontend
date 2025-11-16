@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SHARED_IMPORTS } from '../../shared/mat-imports';
+import { FilterField, FilterFieldOption } from '../../models/filter-definition';
 
 @Component({
   selector: 'filter-bar',
@@ -20,8 +21,7 @@ import { SHARED_IMPORTS } from '../../shared/mat-imports';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilterBarComponent implements OnInit, OnChanges {
-  @Input() fields: any[] = [];
-  @Input() debounce = 300;
+  @Input() fields: FilterField[] = [];
   @Output() filterChange = new EventEmitter<any>();
 
   form!: FormGroup;
@@ -41,17 +41,7 @@ export class FilterBarComponent implements OnInit, OnChanges {
   private buildForm() {
     const group: any = {};
     (this.fields || []).forEach((f) => {
-      const initial =
-        f?.value !== undefined
-          ? f.value
-          : f.type === 'multiselect'
-          ? []
-          : f.type === 'checkbox' || f.type === 'boolean'
-          ? false
-          : f.type === 'select'
-          ? null
-          : '';
-      group[f.key] = [initial];
+      group[f.key] = [this.getInitialValue(f)];
     });
     this.form = this.fb.group(group);
     this.emitClean(this.form.value);
@@ -65,19 +55,24 @@ export class FilterBarComponent implements OnInit, OnChanges {
     (this.fields || []).forEach((f) => {
       const ctrl = this.form.get(f.key);
       if (!ctrl) return;
-      const resetVal =
-        f?.value !== undefined
-          ? f.value
-          : f.type === 'multiselect'
-          ? []
-          : f.type === 'checkbox' || f.type === 'boolean'
-          ? false
-          : f.type === 'select'
-          ? null
-          : '';
-      ctrl.setValue(resetVal);
+      ctrl.setValue(this.getInitialValue(f));
     });
     this.emitClean(this.form.value);
+  }
+
+  private getInitialValue(field: FilterField) {
+    if (field?.value !== undefined) return field.value;
+    switch (field.type) {
+      case 'multiselect':
+        return [];
+      case 'checkbox':
+      case 'boolean':
+        return false;
+      case 'select':
+        return null;
+      default:
+        return '';
+    }
   }
 
   private emitClean(raw: any) {
@@ -90,5 +85,13 @@ export class FilterBarComponent implements OnInit, OnChanges {
       cleaned[k] = v;
     }
     this.filterChange.emit(cleaned);
+  }
+
+  getOptionLabel(opt: FilterFieldOption | string): string {
+    return typeof opt === 'string' ? opt : opt.label;
+  }
+
+  getOptionValue(opt: FilterFieldOption | string) {
+    return typeof opt === 'string' ? opt : opt.value;
   }
 }

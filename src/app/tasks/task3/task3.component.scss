@@ -62,10 +62,6 @@
   color: var(--color-text);
 }
 
-.task3-trend {
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
-}
-
 .task3-section {
   background: var(--color-surface);
   border: 1px solid rgba(20, 32, 51, 0.06);
@@ -92,8 +88,13 @@
   min-height: 320px;
 }
 
-.chart-svg {
-  overflow: visible;
+.chart-area {
+  height: 260px;
+}
+
+.chart-canvas {
+  width: 100% !important;
+  height: 100% !important;
 }
 
 .table-responsive {
@@ -164,28 +165,6 @@
 .gradient-card--amber {
   background: var(--gradient-card-amber);
   border-color: rgba(255, 193, 7, 0.35);
-}
-
-.task3 .axis-label {
-  fill: var(--color-text-muted);
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.task3 .axis-label--y {
-  text-anchor: middle;
-}
-
-.task3 .axis-tick {
-  fill: #7a87a8;
-  font-size: 11px;
-}
-
-.task3 .data-label {
-  fill: var(--color-text);
-  font-size: 11px;
-  font-weight: 600;
 }
 
 @media (max-width: 576px) {

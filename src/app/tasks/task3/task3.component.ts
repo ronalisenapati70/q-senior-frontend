@@ -1,22 +1,60 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { SHARED_IMPORTS } from '../../shared/mat-imports';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {ChartConfiguration, ChartData} from 'chart.js';
+import 'chart.js/auto';
+import {BaseChartDirective, provideCharts, withDefaultRegisterables} from 'ng2-charts';
+import {SHARED_IMPORTS} from '../../shared/mat-imports';
+
+export interface Asset {
+  name: string;
+  category: string;
+  medium: string;
+  origin: string;
+  location: string;
+  image: string;
+  estimatedValue: number;
+  currency: string;
+  lastAppraisal: string | Date;
+  acquisitionDate: string | Date;
+  acquisitionCost: number;
+  serialNumber: string;
+  provenance: string;
+  condition: string;
+}
+
+export interface PricePoint {
+  t: number | string;
+  v: number;
+}
+
+export interface Transaction {
+  date: string | Date;
+  price: number;
+  location: string;
+}
 
 @Component({
   selector: 'app-task3',
   standalone: true,
-  imports: SHARED_IMPORTS,
+  imports: [...SHARED_IMPORTS, BaseChartDirective],
+  providers: [provideCharts(withDefaultRegisterables())],
   templateUrl: './task3.component.html',
   styleUrl: './task3.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Task3Component {
-  asset = {
+export class Task3Component implements OnChanges {
+  @Input() asset: Asset = {
     name: '1964 Aston Martin DB5',
     category: 'Automotive / Classic Car',
     medium: 'Grand touring coupe',
     origin: 'Originally delivered to London, UK',
     location: 'Private collection, Munich, Germany',
-    image: 'astonMartin.png',
+    image: 'assets/astonMartin.png',
     estimatedValue: 6_200_000,
     currency: 'USD',
     lastAppraisal: '2023-09-18',
@@ -27,7 +65,7 @@ export class Task3Component {
     condition: 'Pristine',
   };
 
-  priceSeries = [
+  @Input() priceSeries: PricePoint[] = [
     { t: 2014, v: 28 },
     { t: 2015, v: 30 },
     { t: 2016, v: 32 },
@@ -40,7 +78,7 @@ export class Task3Component {
     { t: 2023, v: 45 },
   ];
 
-  transactions = [
+  @Input() transactions: Transaction[] = [
     { date: '2023-11-02', price: 44_000_000, location: 'Geneva, Switzerland' },
     { date: '2021-05-18', price: 40_500_000, location: 'New York, USA' },
     { date: '2018-10-09', price: 33_250_000, location: 'London, UK' },
@@ -53,6 +91,12 @@ export class Task3Component {
 
   get endingValue(): number {
     return this.priceSeries[this.priceSeries.length - 1]?.v ?? 0;
+  }
+  get startLabel(): string | number | null {
+    return this.priceSeries.length ? this.priceSeries[0].t : null;
+  }
+  get endLabel(): string | number | null {
+    return this.priceSeries.length ? this.priceSeries[this.priceSeries.length - 1].t : null;
   }
 
   get netChange(): number {
@@ -76,7 +120,7 @@ export class Task3Component {
     );
   }
 
-  get bestYear(): { year: number; value: number } | null {
+  get bestYear(): { year: string | number; value: number } | null {
     if (!this.priceSeries.length) {
       return null;
     }
@@ -87,26 +131,85 @@ export class Task3Component {
     return { year: bestPoint.t, value: bestPoint.v };
   }
 
-  get linePath(): string {
-    const w = 640,
-      h = 240,
-      pad = 36;
-    const xs = this.priceSeries.map((d) => d.t);
-    const ys = this.priceSeries.map((d) => d.v);
-    const minX = Math.min(...xs),
-      maxX = Math.max(...xs);
-    const minY = Math.min(...ys),
-      maxY = Math.max(...ys);
-    const sx = (x: number) =>
-      pad + ((x - minX) / (maxX - minX)) * (w - pad * 2);
-    const sy = (y: number) =>
-      h - pad - ((y - minY) / (maxY - minY)) * (h - pad * 2);
 
-    return this.priceSeries
-      .map(
-        (d, i) =>
-          `${i === 0 ? 'M' : 'L'} ${sx(d.t).toFixed(1)} ${sy(d.v).toFixed(1)}`
-      )
-      .join(' ');
+  lineChartData: ChartData<'line'> = this.buildChartData(this.priceSeries);
+
+  lineChartOptions: ChartConfiguration<'line'>['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false,
+      },
+      tooltip: {
+        intersect: false,
+        mode: 'index',
+        callbacks: {
+          label: (ctx) => {
+            const y = ctx.parsed.y;
+            return `${typeof y === 'number' ? y.toFixed(1) : 0}M USD`;
+          },
+          title: (items) => `Year ${items[0]?.label}`,
+        },
+      },
+    },
+    interaction: {
+      intersect: false,
+      mode: 'nearest',
+    },
+    scales: {
+      x: {
+        display: true,
+        grid: {
+          display: false,
+        },
+        ticks: {
+          maxRotation: 0,
+        },
+      },
+      y: {
+        display: true,
+        grid: {
+          color: 'rgba(0,0,0,0.05)',
+        },
+        ticks: {
+          callback: (value) => `${value}M`,
+        },
+      },
+    },
+  };
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['priceSeries']) {
+      this.lineChartData = this.buildChartData(this.priceSeries);
+    }
+  }
+
+  private buildChartData(series: PricePoint[]): ChartData<'line'> {
+    const labels = series.map((d) => d.t?.toString());
+    const data = series.map((d) => d.v);
+    return {
+      labels,
+      datasets: [
+        {
+          data,
+          label: 'Estimated value',
+          borderColor: '#0d6efd',
+          backgroundColor: 'rgba(13, 110, 253, 0.15)',
+          tension: 0.3,
+          fill: {
+            target: 'origin',
+            above: 'rgba(13, 110, 253, 0.08)',
+          },
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBorderColor: '#0d6efd',
+          pointBackgroundColor: '#ffffff',
+          pointHoverBackgroundColor: '#0d6efd',
+          pointHoverBorderColor: '#fff',
+          clip: 0,
+        },
+      ],
+    };
   }
 }
